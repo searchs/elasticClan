@@ -1,4 +1,5 @@
-# Remember you're on Ubuntu Ola!
+# Remember you're on Ubuntu Ola! - 
+# File Location: /etc/default/elasticsearch
 
 START_DAEMON=true
 ES_USER=elasticsearch
