@@ -57,3 +57,54 @@ curl -XPOST localhost:9200/yaba -d '{ "settings" : { "number_of_shards" : 2,
    curl -XPUT 'http://localhost:9200/_river/benue/_meta' -d  '{"type": "dummy"}'
   #  --should get an OK:true response
 #12.  
+
+
+# Elasticsearch Operations: https://thoughts.t37.net/an-elasticsearch-cheat-sheet-9b92c9211d7b
+
+# Mass Delet Indexes
+for index in $(curl -XGET localhost:9200/_cat/indices | awk ‘/pattern/ {print $3}’); do curl -XDELETE localhost:9200/$index?master_timeout=120s; done
+
+# sort Existing indexes by number of deleted documents, then optimize
+for indice in $(CURL -XGET localhost:9200/_cat/indices | sort -rk 7 | awk ‘{print $3}’); do curl -XPOST http://localhost:9200/${indice}/_optimize?max_num_segments=1; done
+
+# Node information
+curl -XGET http://localhost:9200/_cat/nodes?v&h=host,r,d,hc,rc,fdc,l
+
+
+# sort by Free Disk Space
+curl -XGET http://localhost:9200/_cat/nodes?v&h=host,r,d,hc,rc,fdc,l | sort hrk 3
+# sort by Heap Occupancy
+curl -XGET http://localhost:9200/_cat/nodes?v&h=host,r,d,hc,rc,fdc,l | sort hrk 4
+
+# Indices Information
+curl -XGET http://localhost:9200/_cat/indices?v
+
+# Shard Allocation Information
+curl -XGET http://localhost:9200/_cat/shards?v
+
+# REcovery Information
+curl -XGET https://localhost/_recovery?pretty&active_only
+
+# Segments Information
+curl -XGET https://localhost/curl -XGET https://localhost/_cat/nodes?h=host,r,d,hc,rc,fdc,l | sort -hrk 3
+
+# Cluster Stats
+curl -XGET https://localhost/_cluster/stats?pretty
+
+# Node Stats
+curl -XGET https://localhost/_nodes/stats?pretty
+
+# Indices Stats
+curl -XGET https://localhost/someindice/_stats?pretty
+
+# Indice Mapping
+curl -XGET https://localhost/someindice/_mapping
+
+# Indice Settings
+curl -XGET https://localhost/someindice/_settings
+
+# Cluster Dynamic Settings
+curl -XGET https://localhost/_cluster/settings
+
+# All Cluster Settings
+curl -XGET https://localhost/_settings
